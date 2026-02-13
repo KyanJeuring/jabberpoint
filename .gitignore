@@ -39,3 +39,10 @@ bin/
 # Runtime artifacts
 # ==================================================
 *.pid
+
+target/
+bin/
+out/
+*.class
+*.iml
+*.zip

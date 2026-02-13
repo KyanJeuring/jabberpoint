@@ -45,3 +45,4 @@ bin/
 out/
 *.class
 *.iml
+*.zip

@@ -1,0 +1,134 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      promote_to:
+        description: 'Target environment (test | acceptance | production)'
+        required: true
+        default: 'acceptance'
+        type: choice
+        options:
+          - test
+          - acceptance
+          - production
+      ref:
+        description: 'Git ref to deploy (branch, tag, or SHA). Leave empty to use the workflow ref.'
+        required: false
+
+concurrency:
+  group: cd
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Build
+        run: mvn -B -ntp clean package
+
+      - name: Upload deployable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jabberpoint
+          path: target/*.jar
+
+  deploy_dev:
+    name: Deploy to Development
+    needs: build
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/dev' }}
+    runs-on: ubuntu-latest
+    environment: development
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: jabberpoint
+          path: dist
+
+      - name: Deploy (placeholder)
+        run: |
+          echo "Deploying to DEVELOPMENT"
+          ls -la dist
+          # Example real deploy:
+          # scp dist/*.jar $SSH_USER@$DEV_HOST:/opt/jabberpoint/
+          # ssh $SSH_USER@$DEV_HOST 'systemctl restart jabberpoint'
+
+  deploy_test:
+    name: Deploy to Test
+    needs: build
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    environment: test
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: jabberpoint
+          path: dist
+
+      - name: Deploy (placeholder)
+        run: |
+          echo "Deploying to TEST"
+          ls -la dist
+
+  deploy_acceptance:
+    name: Deploy to Acceptance
+    needs: build
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.promote_to == 'acceptance' }}
+    runs-on: ubuntu-latest
+    environment: acceptance
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: jabberpoint
+          path: dist
+
+      - name: Deploy (placeholder)
+        run: |
+          echo "Deploying to ACCEPTANCE"
+          ls -la dist
+
+  deploy_production:
+    name: Deploy to Production
+    needs: build
+    if: ${{ (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) || (github.event_name == 'workflow_dispatch' && inputs.promote_to == 'production') }}
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: jabberpoint
+          path: dist
+
+      - name: Deploy (placeholder)
+        run: |
+          echo "Deploying to PRODUCTION"
+          ls -la dist

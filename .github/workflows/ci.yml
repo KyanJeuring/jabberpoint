@@ -5,16 +5,19 @@ on:
   push:
     branches:
       - '**'
+    tags:
+      - 'v*'
 
 concurrency:
-  group: ci
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build-test:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
       - name: Checkout
@@ -27,11 +30,20 @@ jobs:
           java-version: '21'
           cache: maven
 
-      - name: Build
+      - name: Build and verify
         run: mvn -B -ntp clean verify
 
-      - name: Upload JAR artifact
+      - name: Prepare deployable JAR
+        run: |
+          mkdir -p dist
+          JAR_FILE="$(find target -maxdepth 1 -type f -name '*.jar' ! -name '*sources.jar' ! -name '*javadoc.jar' | head -n 1)"
+          test -n "$JAR_FILE"
+          cp "$JAR_FILE" dist/jabberpoint.jar
+
+      - name: Upload deployable artifact
         uses: actions/upload-artifact@v4
         with:
           name: jabberpoint-jar
-          path: target/*.jar
+          path: dist/jabberpoint.jar
+          if-no-files-found: error
+          retention-days: 30

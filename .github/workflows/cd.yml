@@ -46,7 +46,6 @@ jobs:
     environment: development
     env:
       REMOTE_APP_DIR: /opt/jabberpoint/development
-      SERVICE_NAME: jabberpoint-development
 
     steps:
       - name: Download artifact
@@ -84,7 +83,7 @@ jobs:
           unzip -o artifact.zip -d dist
           ls -la dist
 
-      - name: Deploy to Development
+      - name: Development
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
@@ -92,13 +91,12 @@ jobs:
           ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
 
           scp -i ~/.ssh/id_ed25519 -P "${{ secrets.SSH_PORT }}" "dist/${REMOTE_JAR_NAME}" \
-            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/${SERVICE_NAME}.jar"
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/development-${REMOTE_JAR_NAME}"
 
           ssh -i ~/.ssh/id_ed25519 -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "
             sudo mkdir -p ${REMOTE_APP_DIR} &&
-            sudo mv /tmp/${SERVICE_NAME}.jar ${REMOTE_APP_DIR}/${REMOTE_JAR_NAME} &&
-            sudo systemctl restart ${SERVICE_NAME} &&
-            sudo systemctl status ${SERVICE_NAME} --no-pager
+            sudo mv /tmp/development-${REMOTE_JAR_NAME} ${REMOTE_APP_DIR}/${REMOTE_JAR_NAME} &&
+            ls -l ${REMOTE_APP_DIR}/${REMOTE_JAR_NAME}
           "
 
   test:
@@ -114,7 +112,6 @@ jobs:
     environment: test
     env:
       REMOTE_APP_DIR: /opt/jabberpoint/test
-      SERVICE_NAME: jabberpoint-test
 
     steps:
       - name: Download artifact
@@ -152,7 +149,7 @@ jobs:
           unzip -o artifact.zip -d dist
           ls -la dist
 
-      - name: Deploy to Test
+      - name: Test
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
@@ -160,13 +157,12 @@ jobs:
           ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
 
           scp -i ~/.ssh/id_ed25519 -P "${{ secrets.SSH_PORT }}" "dist/${REMOTE_JAR_NAME}" \
-            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/${SERVICE_NAME}.jar"
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/test-${REMOTE_JAR_NAME}"
 
           ssh -i ~/.ssh/id_ed25519 -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "
             sudo mkdir -p ${REMOTE_APP_DIR} &&
-            sudo mv /tmp/${SERVICE_NAME}.jar ${REMOTE_APP_DIR}/${REMOTE_JAR_NAME} &&
-            sudo systemctl restart ${SERVICE_NAME} &&
-            sudo systemctl status ${SERVICE_NAME} --no-pager
+            sudo mv /tmp/test-${REMOTE_JAR_NAME} ${REMOTE_APP_DIR}/${REMOTE_JAR_NAME} &&
+            ls -l ${REMOTE_APP_DIR}/${REMOTE_JAR_NAME}
           "
 
   acceptance:
@@ -180,7 +176,6 @@ jobs:
     environment: acceptance
     env:
       REMOTE_APP_DIR: /opt/jabberpoint/acceptance
-      SERVICE_NAME: jabberpoint-acceptance
 
     steps:
       - name: Download artifact
@@ -229,7 +224,7 @@ jobs:
           unzip -o artifact.zip -d dist
           ls -la dist
 
-      - name: Deploy to Acceptance
+      - name: Acceptance
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
@@ -237,13 +232,12 @@ jobs:
           ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
 
           scp -i ~/.ssh/id_ed25519 -P "${{ secrets.SSH_PORT }}" "dist/${REMOTE_JAR_NAME}" \
-            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/${SERVICE_NAME}.jar"
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/acceptance-${REMOTE_JAR_NAME}"
 
           ssh -i ~/.ssh/id_ed25519 -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "
             sudo mkdir -p ${REMOTE_APP_DIR} &&
-            sudo mv /tmp/${SERVICE_NAME}.jar ${REMOTE_APP_DIR}/${REMOTE_JAR_NAME} &&
-            sudo systemctl restart ${SERVICE_NAME} &&
-            sudo systemctl status ${SERVICE_NAME} --no-pager
+            sudo mv /tmp/acceptance-${REMOTE_JAR_NAME} ${REMOTE_APP_DIR}/${REMOTE_JAR_NAME} &&
+            ls -l ${REMOTE_APP_DIR}/${REMOTE_JAR_NAME}
           "
 
   production:
@@ -257,7 +251,6 @@ jobs:
     environment: production
     env:
       REMOTE_APP_DIR: /opt/jabberpoint/production
-      SERVICE_NAME: jabberpoint-production
 
     steps:
       - name: Download artifact
@@ -306,7 +299,7 @@ jobs:
           unzip -o artifact.zip -d dist
           ls -la dist
 
-      - name: Deploy to Production
+      - name: Production
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
@@ -314,11 +307,10 @@ jobs:
           ssh-keyscan -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
 
           scp -i ~/.ssh/id_ed25519 -P "${{ secrets.SSH_PORT }}" "dist/${REMOTE_JAR_NAME}" \
-            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/${SERVICE_NAME}.jar"
+            "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/tmp/production-${REMOTE_JAR_NAME}"
 
           ssh -i ~/.ssh/id_ed25519 -p "${{ secrets.SSH_PORT }}" "${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}" "
             sudo mkdir -p ${REMOTE_APP_DIR} &&
-            sudo mv /tmp/${SERVICE_NAME}.jar ${REMOTE_APP_DIR}/${REMOTE_JAR_NAME} &&
-            sudo systemctl restart ${SERVICE_NAME} &&
-            sudo systemctl status ${SERVICE_NAME} --no-pager
+            sudo mv /tmp/production-${REMOTE_JAR_NAME} ${REMOTE_APP_DIR}/${REMOTE_JAR_NAME} &&
+            ls -l ${REMOTE_APP_DIR}/${REMOTE_JAR_NAME}
           "

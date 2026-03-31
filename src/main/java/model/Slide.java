@@ -9,8 +9,9 @@ import java.util.List;
 
 public class Slide
 {
-    private int width;
-    private int height;
+    public static final int WIDTH = 1200;
+    public static final int HEIGHT = 800;
+
     private String title;
     private final List<SlideItem> items = new ArrayList<>();
 
@@ -25,40 +26,9 @@ public class Slide
     public void setTitle(String newTitle) {
         title = newTitle;
     }
-    public int getWidth()
-    {
-        return width;
-    }
-
-    public void setWidth(int width)
-    {
-        if(width > 300 && width < 1500)
-        {
-            this.width = width;
-        }
-    }
-
-    public int getHeight()
-    {
-        return height;
-    }
-
-    public void setHeight(int height)
-    {
-        if(height > 300 && height < 1500)
-        {
-            this.height = height;
-        }
-    }
-
 
     public void append(int level, String message) {
-        try {
-            append(new TextItem(level, message));
-        } catch (IOException e) {
-            // This should not happen with TextItem
-            e.printStackTrace();
-        }
+        append(new TextItem(level, message));
     }
 
     public SlideItem getSlideItem(int number) {
@@ -66,7 +36,7 @@ public class Slide
     }
 
     public List<SlideItem> getSlideItems() {
-        return items;
+        return java.util.Collections.unmodifiableList(items);
     }
 
     public int getSize() {
@@ -77,23 +47,18 @@ public class Slide
     public void draw(Graphics g, Rectangle area, ImageObserver view) {
         float scale = getScale(area);
         int y = area.y;
-        try {
-            SlideItem slideItem = new TextItem(0, getTitle());
-            Style style = Style.getStyle(slideItem.getLevel());
-            slideItem.draw(area.x, y, scale, g, style, view);
-            y += slideItem.getBoundingBox(g, view, scale, style).height;
-            for (SlideItem item : items) {
-                style = Style.getStyle(item.getLevel());
-                item.draw(area.x, y, scale, g, style, view);
-                y += item.getBoundingBox(g, view, scale, style).height;
-            }
-        } catch (IOException e) {
-            // This should not happen with TextItem
-            e.printStackTrace();
+        SlideItem slideItem = new TextItem(0, getTitle());
+        Style style = Style.getStyle(slideItem.getLevel());
+        slideItem.draw(area.x, y, scale, g, style, view);
+        y += slideItem.getBoundingBox(g, view, scale, style).height;
+        for (SlideItem item : items) {
+            style = Style.getStyle(item.getLevel());
+            item.draw(area.x, y, scale, g, style, view);
+            y += item.getBoundingBox(g, view, scale, style).height;
         }
     }
 
     private float getScale(Rectangle area) {
-        return Math.min(((float) area.width) / 1200, ((float) area.height) / 800);
+        return Math.min(((float) area.width) / WIDTH, ((float) area.height) / HEIGHT);
     }
 }

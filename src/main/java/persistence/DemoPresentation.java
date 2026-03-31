@@ -44,7 +44,7 @@ public class DemoPresentation implements Accesor {
         slide.append(2, "use File->Open from the menu.");
         slide.append(1, " ");
         slide.append(1, "This is the end of the presentation.");
-        slide.append(new BitmapItem(1, "JabberPoint.jpg"));
+        slide.append(new BitmapItem(1, "JabberPoint.gif"));
         presentation.append(slide);
     }
 

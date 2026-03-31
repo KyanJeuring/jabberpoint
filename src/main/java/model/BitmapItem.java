@@ -14,7 +14,12 @@ public class BitmapItem extends SlideItem {
     public BitmapItem(int level, String name) throws IOException {
         super(level);
         imageName = name;
-        bufferedImage = ImageIO.read(new File(imageName));
+        java.net.URL url = getClass().getClassLoader().getResource(imageName);
+        if (url != null) {
+            bufferedImage = ImageIO.read(url);
+        } else {
+            bufferedImage = ImageIO.read(new File(imageName));
+        }
     }
 
     public String getName() {

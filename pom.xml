@@ -22,7 +22,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>JabberPoint</mainClass>
+                            <mainClass>app.JabberPoint</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

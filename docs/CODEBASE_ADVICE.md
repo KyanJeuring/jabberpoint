@@ -1,8 +1,8 @@
-# JabberPoint Codebase Review & Improvement Advice
+# app.JabberPoint Codebase Review & Improvement Advice
 
 ## Overview
 
-The JabberPoint codebase is a small Java desktop application that
+The app.JabberPoint codebase is a small Java desktop application that
 demonstrates a slide presentation system. While the code is relatively
 clear and compact, it shows signs of legacy design patterns, tight
 coupling between components, and limited extensibility.
@@ -20,7 +20,7 @@ to modernize the architecture
 Several parts of the codebase rely on outdated Java APIs or older coding
 practices.
 
-Examples: - `Vector<SlideItem>` used instead of `List` - AWT menu
+Examples: - `Vector<model.SlideItem>` used instead of `List` - AWT menu
 classes (`MenuBar`, `Menu`, `MenuItem`) instead of Swing equivalents -
 Classes in the default package - Direct calls to `System.exit()`
 
@@ -34,9 +34,9 @@ testability
 
 Core application logic is tightly coupled with UI components.
 
-Examples: - `Presentation` contains a `SlideViewerComponent` -
-`Presentation.setSlideNumber()` directly updates the UI -
-`MenuController` manages UI actions and file operations - `JabberPoint`
+Examples: - `model.Presentation` contains a `view.SlideViewerComponent` -
+`model.Presentation.setSlideNumber()` directly updates the UI -
+`controller.MenuController` manages UI actions and file operations - `app.JabberPoint`
 controls startup logic and persistence
 
 Impact: - Hard to test logic independently - UI changes affect core
@@ -48,8 +48,8 @@ logic - Violates separation of concerns
 
 Multiple constants and behaviors are embedded directly in the code.
 
-Examples: - `MenuController.TESTFILE = "test.xml"` -
-`MenuController.SAVEFILE = "dump.xml"` - `Style.createStyles()` defines
+Examples: - `controller.MenuController.TESTFILE = "test.xml"` -
+`controller.MenuController.SAVEFILE = "dump.xml"` - `model.Style.createStyles()` defines
 all visual styles directly - Hard-coded UI layout coordinates
 
 Impact: - Difficult to change behavior without editing code - Reduces
@@ -87,7 +87,7 @@ feedback
 
 Adding new slide item types requires modifying core code.
 
-Examples: - `XMLAccessor` uses `if/else` logic to detect item types -
+Examples: - `persistence.XMLAccessor` uses `if/else` logic to detect item types -
 `instanceof` checks during save operations
 
 Impact: - Violates the Open/Closed Principle - Makes new feature
@@ -97,7 +97,7 @@ additions harder
 
 ## 7. Repetitive UI Command Logic
 
-`MenuController` contains many inline anonymous listeners.
+`controller.MenuController` contains many inline anonymous listeners.
 
 Problems: - Large class responsibilities - Hard to test command
 behavior - Poor separation between UI and actions
@@ -134,9 +134,9 @@ of concerns
 
 ## 2. Make the Model UI-Independent
 
-Refactor `Presentation` so it does not reference UI components.
+Refactor `model.Presentation` so it does not reference UI components.
 
-Actions: - Remove `SlideViewerComponent` from `Presentation` - Use
+Actions: - Remove `view.SlideViewerComponent` from `model.Presentation` - Use
 event/listener updates instead
 
 Benefits: - Model becomes testable - UI becomes replaceable
@@ -185,7 +185,7 @@ package → named packages
 
 Before large refactoring:
 
-Test areas: - Slide navigation - XML import/export - Slide item
+Test areas: - model.Slide navigation - XML import/export - model.Slide item
 creation - Boundary conditions
 
 Benefits: - Prevent regressions - Enable safer refactoring
@@ -209,7 +209,7 @@ Benefits: - Reusable logic - Testable commands - Cleaner UI controllers
 
 Use observers to update views when model changes.
 
-Example events: - Slide changed - Presentation loaded
+Example events: - model.Slide changed - model.Presentation loaded
 
 Benefits: - Decouples model and view - Supports multiple UI components
 
@@ -275,7 +275,7 @@ Benefits: - Cleaner object creation - Easier demo/test setup
 
 # Conclusion
 
-The JabberPoint codebase is a clear and understandable example
+The app.JabberPoint codebase is a clear and understandable example
 application but reflects older design practices. By introducing better
 separation of concerns and applying modern design patterns, the system
 can become:

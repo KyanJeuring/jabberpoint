@@ -54,19 +54,43 @@ After building the project, you can run the compiled JAR file:
 java -jar target/jabberpoint-1.0.0.jar
 ```
 
+## Running Tests
+
+### Execute All Tests
+
+To run all 168 unit tests:
+
+```bash
+mvn test
+```
+
+This command will:
+- Compile the test code
+- Execute all unit tests in `src/test/java/`
+- Display test results and any failures
+- Generate coverage reports
+
 ## Project Structure
 
 ```
 jabberpoint/
 ├── src/
-│   └── main/
+│   ├── main/
+│   │   ├── java/
+│   │   │   ├── app/               # Application entry point
+│   │   │   ├── controller/        # Command controllers
+│   │   │   ├── model/             # Core data models
+│   │   │   ├── persistence/       # File I/O and XML handling
+│   │   │   └── view/              # UI components
+│   │   └── resources/             # Resources and documentation
+│   └── test/
 │       ├── java/
-│       │   ├── app/               # Application entry point
-│       │   ├── controller/        # Command controllers
-│       │   ├── model/             # Core data models
-│       │   ├── persistence/       # File I/O and XML handling
-│       │   └── view/              # UI components
-│       └── resources/             # Resources and documentation
+│       │   ├── app/               # Application tests
+│       │   ├── controller/        # Controller tests
+│       │   ├── model/             # Model tests
+│       │   ├── persistence/       # Persistence tests
+│       │   └── view/              # View tests
+│       └── resources/             # Test resources
 ├── docs/                          # Additional documentation
 ├── pom.xml                        # Maven configuration
 └── test.xml                       # Test presentation file

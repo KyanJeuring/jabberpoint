@@ -15,12 +15,8 @@ public class SavePresentationCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        try {
-            XMLAccessor accessor = new XMLAccessor();
-            accessor.saveFile(presentation, filename);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void execute() throws IOException {
+        XMLAccessor accessor = new XMLAccessor();
+        accessor.saveFile(presentation, filename);
     }
 }

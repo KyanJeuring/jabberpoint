@@ -15,12 +15,8 @@ public class OpenPresentationCommand implements Command {
     }
 
     @Override
-    public void execute() {
-        try {
-            XMLAccessor accessor = new XMLAccessor();
-            accessor.loadFile(presentation, filename);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void execute() throws IOException {
+        XMLAccessor accessor = new XMLAccessor();
+        accessor.loadFile(presentation, filename);
     }
 }

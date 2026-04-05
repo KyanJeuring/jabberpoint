@@ -82,7 +82,9 @@ jabberpoint/
 │   │   │   ├── model/             # Core data models
 │   │   │   ├── persistence/       # File I/O and XML handling
 │   │   │   └── view/              # UI components
-│   │   └── resources/             # Resources and documentation
+│   │   └── resources/
+│   │       ├── Jabberpoint.asta   # UML diagrams (Astah format)
+│   │       └── README.md          # Resources documentation
 │   └── test/
 │       ├── java/
 │       │   ├── app/               # Application tests
@@ -143,8 +145,39 @@ Clean the project and rebuild:
 mvn clean package
 ```
 
+## Design Documentation
+
+### UML Diagrams
+
+The system architecture and design are documented using UML 2.5 diagrams, located at:
+
+```
+src/main/resources/Jabberpoint.asta
+```
+
+This Astah file contains:
+- Class diagrams showing the layered architecture
+- Sequence diagrams for key workflows
+- Design pattern implementations
+
+**To view the diagrams:**
+- Download and install [Astah Professional](https://astah.net/) or Astah Community
+- Open `src/main/resources/Jabberpoint.asta`
+
+### Design Patterns
+
+The application implements the following design patterns:
+
+| Pattern | Purpose | Location |
+|---------|---------|----------|
+| **Command** | Encapsulates user actions as objects | `controller/` package |
+| **Observer** | Decouples model from view updates | `model/Observer`, `Presentation` |
+| **Factory** | Creates slide items based on type | `persistence/SlideItemFactory` |
+| **Strategy** | Interchangeable file loading strategies | `persistence/Accesor` interface |
+
 ## Additional Resources
 
 - See `docs/CODEBASE_ADVICE.md` for codebase guidelines
 - See `jabberpoint.dtd` for the XML file format definition
 - See `test.xml` for an example presentation file
+- See `src/main/resources/Jabberpoint.asta` for UML diagrams

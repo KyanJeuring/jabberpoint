@@ -33,7 +33,14 @@ public class MenuController extends MenuBar {
         menuItem.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
-                new OpenPresentationCommand(presentation, fileChooser.getSelectedFile().getAbsolutePath()).execute();
+                try {
+                    new OpenPresentationCommand(presentation, fileChooser.getSelectedFile().getAbsolutePath()).execute();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Failed to open presentation:\n" + ex.getMessage(),
+                            "Error Opening File",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -44,7 +51,14 @@ public class MenuController extends MenuBar {
         menuItem.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             if (fileChooser.showSaveDialog(frame) == JFileChooser.APPROVE_OPTION) {
-                new SavePresentationCommand(presentation, fileChooser.getSelectedFile().getAbsolutePath()).execute();
+                try {
+                    new SavePresentationCommand(presentation, fileChooser.getSelectedFile().getAbsolutePath()).execute();
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(frame,
+                            "Failed to save presentation:\n" + ex.getMessage(),
+                            "Error Saving File",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 

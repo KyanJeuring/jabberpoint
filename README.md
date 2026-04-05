@@ -77,23 +77,27 @@ jabberpoint/
 ├── src/
 │   ├── main/
 │   │   ├── java/
-│   │   │   ├── app/               # Application entry point
-│   │   │   ├── controller/        # Command controllers
-│   │   │   ├── model/             # Core data models
-│   │   │   ├── persistence/       # File I/O and XML handling
-│   │   │   └── view/              # UI components
-│   │   └── resources/             # Resources and documentation
+│   │   │   ├── app/                       # Application entry point
+│   │   │   ├── controller/                # Command controllers
+│   │   │   ├── model/                     # Core data models
+│   │   │   ├── persistence/               # File I/O and XML handling
+│   │   │   └── view/                      # UI components
+│   │   └── resources/
+│   │       ├── diagrams/                  # UML diagrams (Astah format)
+│   │       │   ├── Jabberpoint_old.asta
+│   │       │   └── Jabberpoint.asta
+│   │       └── README.md                  # Resources documentation
 │   └── test/
 │       ├── java/
-│       │   ├── app/               # Application tests
-│       │   ├── controller/        # Controller tests
-│       │   ├── model/             # Model tests
-│       │   ├── persistence/       # Persistence tests
-│       │   └── view/              # View tests
-│       └── resources/             # Test resources
-├── docs/                          # Additional documentation
-├── pom.xml                        # Maven configuration
-└── test.xml                       # Test presentation file
+│       │   ├── app/                       # Application tests
+│       │   ├── controller/                # Controller tests
+│       │   ├── model/                     # Model tests
+│       │   ├── persistence/               # Persistence tests
+│       │   └── view/                      # View tests
+│       └── resources/                     # Test resources
+├── docs/                                  # Additional documentation
+├── pom.xml                                # Maven configuration
+└── test.xml                               # Test presentation file
 ```
 
 ### Key Components
@@ -143,8 +147,42 @@ Clean the project and rebuild:
 mvn clean package
 ```
 
+## Design Documentation
+
+### UML Diagrams
+
+The system architecture and design are documented using UML 2.5 diagrams, located at:
+
+```
+src/main/resources/diagrams/Jabberpoint.asta
+src/main/resources/diagrams/Jabberpoint_old.asta
+```
+
+These Astah files contain:
+- Class diagrams showing the layered architecture
+- Sequence diagrams for key workflows
+- Design pattern implementations
+
+**To view the diagrams:**
+- Download and install [Astah Professional](https://astah.net/) or Astah Community
+- Open `src/main/resources/diagrams/Jabberpoint.asta` for the current redesign
+- Open `src/main/resources/diagrams/Jabberpoint_old.asta` for the legacy design
+
+### Design Patterns
+
+The application implements the following design patterns:
+
+| Pattern | Purpose | Location |
+|---------|---------|----------|
+| **Command** | Encapsulates user actions as objects | `controller/` package |
+| **Observer** | Decouples model from view updates | `model/Observer`, `Presentation` |
+| **Factory** | Creates slide items based on type | `persistence/SlideItemFactory` |
+| **Strategy** | Interchangeable file loading strategies | `persistence/Accesor` interface |
+
 ## Additional Resources
 
 - See `docs/CODEBASE_ADVICE.md` for codebase guidelines
 - See `jabberpoint.dtd` for the XML file format definition
 - See `test.xml` for an example presentation file
+- See `src/main/resources/diagrams/Jabberpoint.asta` for UML diagrams
+- See `src/main/resources/diagrams/Jabberpoint_old.asta` for legacy UML diagrams

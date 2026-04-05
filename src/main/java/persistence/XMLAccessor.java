@@ -34,6 +34,17 @@ public class XMLAccessor implements Accesor {
         return titles.item(0).getTextContent();
     }
 
+    private String escapeXML(String text) {
+        if (text == null) {
+            return "";
+        }
+        return text.replace("&", "&amp;")
+                   .replace("<", "&lt;")
+                   .replace(">", "&gt;")
+                   .replace("\"", "&quot;")
+                   .replace("'", "&apos;");
+    }
+
     @Override
     public void loadFile(Presentation presentation, String filename) throws IOException {
         try {
@@ -89,21 +100,21 @@ public class XMLAccessor implements Accesor {
             out.println("<!DOCTYPE presentation SYSTEM \"jabberpoint.dtd\">");
             out.println("<presentation>");
             out.print("<showtitle>");
-            out.print(presentation.getTitle());
+            out.print(escapeXML(presentation.getTitle()));
             out.println("</showtitle>");
             for (int slideNumber = 0; slideNumber < presentation.getSize(); slideNumber++) {
                 Slide slide = presentation.getSlide(slideNumber);
                 out.println("<slide>");
-                out.println("<title>" + slide.getTitle() + "</title>");
+                out.println("<title>" + escapeXML(slide.getTitle()) + "</title>");
                 List<SlideItem> slideItems = slide.getSlideItems();
                 for (SlideItem slideItem : slideItems) {
                     out.print("<item kind=");
                     if (slideItem instanceof TextItem) {
                         out.print("\"text\" level=\"" + slideItem.getLevel() + "\">");
-                        out.print(((TextItem) slideItem).getText());
+                        out.print(escapeXML(((TextItem) slideItem).getText()));
                     } else if (slideItem instanceof BitmapItem) {
                         out.print("\"image\" level=\"" + slideItem.getLevel() + "\">");
-                        out.print(((BitmapItem) slideItem).getName());
+                        out.print(escapeXML(((BitmapItem) slideItem).getName()));
                     }
                     out.println("</item>");
                 }

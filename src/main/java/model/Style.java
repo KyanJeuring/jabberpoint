@@ -6,7 +6,7 @@ import java.awt.Font;
 public class Style {
     private static Style[] styles;
 
-    private  String fontName ;
+    private static final String DEFAULT_FONT = "SansSerif";
     private final int indent;
     private final Color color;
     private final Font font;
@@ -33,7 +33,7 @@ public class Style {
         this.indent = indent;
         this.color = color;
         this.fontSize = points;
-        this.font = new Font(fontName, Font.BOLD, this.fontSize);
+        this.font = new Font(DEFAULT_FONT, Font.BOLD, this.fontSize);
         this.leading = leading;
     }
 
